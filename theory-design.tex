@@ -1,0 +1,384 @@
+%!TEX encoding = UTF-8
+\documentclass{jsreport}
+
+\input{preamble}
+
+\begin{document}
+	\chapter{動作原理・設計}
+
+	\section{ニキシー管駆動回路}
+	
+	本節では，ニキシー管の駆動回路設計について述べる．
+
+	\subsection{アノード駆動回路}
+	ニキシー管はアノードがコモンとなっており，ダイナミック点灯する際はアノードをON/OFFすることで，どの桁を点灯するかを制御する必要ある．
+	ただニキシー管は170V程度の高電圧を加えて制御するため，\figurename \ref{nixie_anode_drive} のように，ゲートを駆動する電圧を高くする必要が生じてしまう．
+
+
+	耐圧の高いトランジスタやFETを使ったような \figurename \ref{nixie_anode_transistor} 回路がある．しかし，アノードの数だけ耐圧の高いトランジスタ/FETを使うため，値段も高くなる．
+	また抵抗等の部品点数アノードの数だけ多くなり実装コストが大きくなる．そのため，トランジスタ/FEt以外を使った制御方法を考える必要がある．
+	250V程度のシンク出力が可能な入手性の高いICは存在しない．そのため各アノードはフォトカプラで駆動するのが一番良いと考えられる．
+	インターネット上の多くの作例で使われていたTOSHIBAのGaAs赤外LEDとダーリントン型フォトトランジスタ光結合させたDIPのフォトカプラのデータシートの抜粋部分のターンオフ時間
+
+	msとスイッチングが遅く，毎秒約2500回ほどオンオフするのがスペック上の限界となっている．
+
+	\subsection{プリバイアス}
+	
+	\subsection{カソードの駆動回路}
+
+	\section{昇圧回路}
+
+	\section{基板設計}
+
+	\subsection{回路図}
+
+	\newgeometry{top=0.5cm,bottom=1cm,left=0.5cm,right=0.5cm,includefoot}
+
+	\begin{landscape}
+
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[width=0.93\linewidth]{image/nixie_drive_schematic_1.pdf}
+				\caption{ドライブ基板 1/2}
+				\label{drive_sch2}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[width=0.93\linewidth]{image/nixie_drive_schematic_2.pdf}
+				\caption{ドライブ基板 2/2}
+				\label{drive_sch1}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+		\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[width=0.93\linewidth]{image/nixie_mount_schematic.pdf}
+				\caption{ニキシー管 マウント基板}
+				\label{drive_sch1}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+		
+	\end{landscape}
+
+	\restoregeometry
+	
+
+	\subsection{基板}
+	本作品に使用した基板は2枚重ねで利用する．
+	1枚目はニキシー管を駆動する昇圧回路．
+
+
+	\begin{landscape}
+		\topskip0pt
+		\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[width=\textheight]{image/drive_pad.pdf}
+				\caption{ニキシー管 ドライブ基板 PAD/外形}
+				\label{drive_pad}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+		\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[width=\textheight]{image/drive_top.pdf}
+				\caption{ニキシー管 ドライブ基板 配線レイヤー/外形}
+				\label{drive_tt}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+		\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[width=\textheight]{image/nix_mount.pdf}
+				\caption{ニキシー管 マウント基板 配線レイヤー/外形}
+				\label{mount_tt}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+	\end{landscape}
+
+
+	\subsection{部品表}
+
+	\begin{center}
+	\begin{longtable}{|l|l|l|l|}
+		\caption{TableName}
+
+		\label{bom} \\
+
+		\hline
+		部品番号 & 値 & パッケージ & 内容 \\ \hline\hline
+		\endfirsthead
+
+		\multicolumn{4}{r}{前ページからの続き} \\ \hline
+		部品番号 & 値 & パッケージ & 内容 \\ \hline\hline
+		\endhead
+
+		\multicolumn{4}{r}{次ページに続く} \\
+		\endfoot
+
+		\multicolumn{4}{r}{以上}
+		\endlastfoot
+
+		BATT1 & SMTU2032 & SMTU2032 & CR2032 Holder \\ \hline
+		C1 & 10uF & C0603 & CAPACITOR \\ \hline
+		C2 & 0.1u & C0603 & CAPACITOR \\ \hline
+		C3 & 10uF & C0603 & CAPACITOR \\ \hline
+		C4 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C5 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C6 & 100uF & C1210 & CAPACITOR \\ \hline
+		C7 & 1000pF  & C0603 & CAPACITOR \\ \hline
+		C8 & 1000pF  & C0603 & CAPACITOR \\ \hline
+		C9 & 10nF & C0603 & CAPACITOR \\ \hline
+		C10 & 1000pF  & C0603 & CAPACITOR \\ \hline
+		C11 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C12 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C13 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C14 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C15 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C16 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C17 & 1000pF  & C0603 & CAPACITOR \\ \hline
+		C18 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C19 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C20 & 1000pF  & C0603 & CAPACITOR \\ \hline
+		C21 & 1000pF  & C0603 & CAPACITOR \\ \hline
+		C22 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C23 & 0.1u & C0603 & CAPACITOR \\ \hline
+		C24 & 10nF & C0603 & CAPACITOR \\ \hline
+		C25 & 10uF & C0603 & CAPACITOR \\ \hline
+		C26 & 10uF & C0603 & CAPACITOR \\ \hline
+		C27 & 0.1u & C0603 & CAPACITOR \\ \hline
+		C28 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C29 & UWT1E221MNL1GS & nichicon capasitor & CAPACITOR \\ \hline
+		C30 & 0.1u & C0603 & CAPACITOR \\ \hline
+		C31 & 33p & C0603 & CAPACITOR \\ \hline
+		C32 & 33p & C0603 & CAPACITOR \\ \hline
+		C33 & 0.1uF & C0603 & CAPACITOR \\ \hline
+		C34 & 1u & C5750 & CAPACITOR \\ \hline
+		C35 & 1u & C5750 & CAPACITOR \\ \hline
+		D1 & RFN2L4STE25 & SOD-106 & FAST RECOVERY DIODE \\ \hline
+		D3 & MMSZ5267BT1G & SOD123 & ZENER DIODE \\ \hline
+		J1 & ZX62R-AB-5P & ZX62R-B-5PA & USB micro b \\ \hline
+		J2 & DC\_JACK\_2DC0005D100 & 2DC0005D100 & DC JACk \\ \hline
+		J3 & FSM-21045-20 & FSM-21045-20 & 20xConnector \\ \hline
+		J4 & PIN HEADER 5P & PIN HEADER 5P & 5xPinHeader \\ \hline
+		J5 & ZX62R-AB-5P & ZX62R-B-5PA & USB micro b \\ \hline
+		J6 & PSM-210223 & PSM-210223 & 20xConnector \\ \hline
+		L1 & LPR6235 & LPR6235 & Couple Inductor \\ \hline
+		LED1 & RX & CHIPLED\_0603 & LED \\ \hline
+		LED2 & TX & CHIPLED\_0603 & LED \\ \hline
+		LED6 & LED1 & CHIPLED\_0603 & LED \\ \hline
+		Q1 & IRLML6344TRPBFTR & SOT23-N-MOSFET & N-ch MOSFET \\ \hline
+		Q2 & MMSS8050-L & SOT23 & Bipolar Transistor NPN \\ \hline
+		Q3 & MMSS8050-L & SOT23 & Bipolar Transistor NPN \\ \hline
+		Q4 & IRLML6344TRPBFTR & SOT23-N-MOSFET & N-ch MOSFET \\ \hline
+		Q5 & FA-238V & FA238-V & Cristal \\ \hline
+		R1 & 1k & R0603 & RESISTOR \\ \hline
+		R2 & 1k & R0603 & RESISTOR \\ \hline
+		R3 & 10k & R0603 & RESISTOR \\ \hline
+		R4 & 470 & R0603 & RESISTOR \\ \hline
+		R5 & 10k & R0603 & RESISTOR \\ \hline
+		R6 & 470 & R0603 & RESISTOR \\ \hline
+		R7 & 10k & R0603 & RESISTOR \\ \hline
+		R8 & 10k & R0603 & RESISTOR \\ \hline
+		R9 & 4.7k & R0603 & RESISTOR \\ \hline
+		R11 & 0.1 & R0603 & RESISTOR \\ \hline
+		R12 & 1k & R0603 & RESISTOR \\ \hline
+		R13 & 20 & R0603 & RESISTOR \\ \hline
+		R14 & 174k & R0603 & RESISTOR \\ \hline
+		R19 & 220k & R0603 & RESISTOR \\ \hline
+		R20 & 4.7k & R0603 & RESISTOR \\ \hline
+		R21 & 4.7k & R0603 & RESISTOR \\ \hline
+		R22 & 10k & R3216 & RESISTOR \\ \hline
+		R23 & 10k & R3216 & RESISTOR \\ \hline
+		R24 & 10k & R3216 & RESISTOR \\ \hline
+		R25 & 10k & R3216 & RESISTOR \\ \hline
+		R26 & 10k & R3216 & RESISTOR \\ \hline
+		R27 & 10k & R3216 & RESISTOR \\ \hline
+		R28 & 10k & R3216 & RESISTOR \\ \hline
+		R29 & 10k & R3216 & RESISTOR \\ \hline
+		R30 & 1k & R0603 & RESISTOR \\ \hline
+		R31 & 10k & R0603 & RESISTOR \\ \hline
+		R32 & 1k & R0603 & RESISTOR \\ \hline
+		R33 & 10k & R0603 & RESISTOR \\ \hline
+		R34 & 1k & R0603 & RESISTOR \\ \hline
+		R35 & 1k & R0603 & RESISTOR \\ \hline
+		R36 & 1k & R0603 & RESISTOR \\ \hline
+		R37 & 1k & R0603 & RESISTOR \\ \hline
+		R38 & 1k & R0603 & RESISTOR \\ \hline
+		R39 & 1k & R0603 & RESISTOR \\ \hline
+		R40 & 1k & R0603 & RESISTOR \\ \hline
+		R41 & 0 & R0603 & RESISTOR \\ \hline
+		R42 & 1k & R0603 & RESISTOR \\ \hline
+		R43 & 1k & R0603 & RESISTOR \\ \hline
+		R44 & 1k & R0603 & RESISTOR \\ \hline
+		R45 & 360k & R0603 & RESISTOR \\ \hline
+		R46 & 1k & R0603 & RESISTOR \\ \hline
+		R47 & 470 & R0603 & RESISTOR \\ \hline
+		R48 & 10k & R0603 & RESISTOR \\ \hline
+		R49 & 470 & R0603 & RESISTOR \\ \hline
+		R50 & 10k & R0603 & RESISTOR \\ \hline
+		R51 & 470 & R0603 & RESISTOR \\ \hline
+		R52 & 10k & R0603 & RESISTOR \\ \hline
+		R57 & 2.4k & R0603 & RESISTOR \\ \hline
+		SP1 & PKLCS1212E4001-R1 & PKLCS1212E4001-R1 & Piezoelectric Speaker \\ \hline
+		SW1 & SKRPACE010 & SKRPACE010 & Switch \\ \hline
+		SW2 & SKRPACE010 & SKRPACE010 & Switch \\ \hline
+		SW3 & SKHHLPA010 & SKHHLPA010 & Switch \\ \hline
+		SW4 & SKHHLPA010 & SKHHLPA010 & Switch \\ \hline
+		SW5 & SKHHLPA010 & SKHHLPA010 & Switch \\ \hline
+		SW6 & SKRPACE010 & SKRPACE010 & Switch \\ \hline
+		U2 & ESP-WROOM-32 & ESP-WROOM-32 & ESP32 micro controller \\ \hline
+		U3 & LM3478 & SOIC8-LT & DC-DC control IC \\ \hline
+		U4 & DS3231M & SO08 & DS3231M Real Time Clock \\ \hline
+		U5 & SN75468 & R-PDSO-G16 & 8-ch Sink Driver \\ \hline
+		U6 & 74HC595D & SO16 & 8-bit SHIFT REGISTER \\ \hline
+		U7 & SN75468 & R-PDSO-G16 & 8-ch Sink Driver \\ \hline
+		U8 & MCP4017 & SC-70-MICROCHIP & Digital Potention Meter \\ \hline
+		U9 & BME280 & LGA-8-2.5X2.5 & Bosch BME280 \\ \hline
+		U10 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U11 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U12 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U13 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U14 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U15 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U16 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U17 & TLP188 & 11-4M1S & Photocoupler \\ \hline
+		U18 & ATMEGA328P-AU & TQFP32 & atmel atmega328p microcontroller \\ \hline
+		U19 & 74HC595D & SO16 & 8-bit SHIFT REGISTER \\ \hline
+		U20 & ADP3338AKCZ-3.3 & SOT233 & Lowdropout Regulator \\ \hline
+		U21 & FT232RL & SSOP28 & USB serial convert IC \\ \hline
+		U22 & FT232RL & SSOP28 & USB serial convert IC \\ \hline
+		N1 & IN-14 & IN-14 & IN-14 \\ \hline
+		N2 & IN-14 & IN-14 & IN-14 \\ \hline
+		N3 & IN-14 & IN-14 & IN-14 \\ \hline
+		N4 & IN-14 & IN-14 & IN-14 \\ \hline
+		N5 & IN-14 & IN-14 & IN-14 \\ \hline
+		N6 & IN-14 & IN-14 & IN-14 \\ \hline
+		N7 & IN-14 & IN-14 & IN-14 \\ \hline
+		N8 & IN-14 & IN-14 & IN-14 \\ \hline
+		
+		\end{longtable}
+	\end{center}
+
+	\section{筐体設計}
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=\linewidth]{image/case_bird_eye.png}
+			\caption{筐体の外観}
+			\label{case}
+		\end{center}
+	\end{figure}
+
+	筐体として，\figurename \ref{case} を設計した．
+	部品として，上面，底面，側面，正面，後面の5種類の板を用いる．
+	それぞれの部品の図面を以下5ページに示す．
+
+	% 用紙を横に
+	\begin{landscape}
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics{image/bottom.pdf}
+				\caption{筐体底面}
+				\label{bottom}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics[angle=270]{image/top.pdf}
+				\caption{筐体上面}
+				\label{top}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics{image/side.pdf}
+				\caption{筐体側面}
+				\label{side}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics{image/front.pdf}
+				\caption{筐体前面}
+				\label{front}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+
+		\newpage
+
+		\topskip0pt
+    	\vspace*{\fill}
+		\begin{figure}[htb!]
+			\begin{center}
+				\includegraphics{image/back.pdf}
+				\caption{筐体後面}
+				\label{back}
+			\end{center}
+		\end{figure}
+		\vspace*{\fill}
+	\end{landscape}
+
+	以上の板を，スリーボンド社の一液無溶剤系湿気硬化型弾性接着剤 クリア\footnote{https://www.monotaro.com/g/00332544/}で，
+	\figurename \ref{bottom} ～ \figurename \ref{back}の各部品を接着し，\figurename \ref{case_comp} のように箱を作る．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=\linewidth]{image/case_comp.png}
+			\caption{接着した筐体}
+			\label{case_comp}
+		\end{center}
+	\end{figure}
+
+	
+
+
+\end{document}

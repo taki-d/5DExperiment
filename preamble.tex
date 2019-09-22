@@ -1,0 +1,42 @@
+\usepackage[at]{easylist}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{comment}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{newpxtext, newpxmath}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage[a4paper]{geometry}
+
+
+
+% for source code
+\usepackage{listings,jlisting}
+\lstset{%
+  language={C},
+  basicstyle={\small},%
+  identifierstyle={\small},%
+  commentstyle={\small\itshape},%
+  keywordstyle={\small\bfseries},%
+  ndkeywordstyle={\small},%
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},%
+  numbers=left,%
+  xrightmargin=0zw,%
+  xleftmargin=3zw,%
+  numberstyle={\scriptsize},%
+  stepnumber=1,
+  numbersep=1zw,%
+  lineskip=-0.5ex%
+}
+
+% 図->figure 変更
+\renewcommand{\figurename}{Fig }
+
+% ソースコード -> SrouceCode
+\renewcommand{\lstlistingname}{Source Code}
+
+% 表 -> Table
+\renewcommand{\tablename}{Table}

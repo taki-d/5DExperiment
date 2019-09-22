@@ -1,0 +1,115 @@
+%!TEX encoding = UTF-8
+\documentclass{jsreport}
+
+\input{preamble}
+
+\begin{document}
+\chapter{目的・全体概要}
+\section{目的}
+
+空想科学ADVのSteins;Gateシリーズが2009年~発売された．世界線の変動率を表すデバイスとして作中にダイバージェンスメーター(Divergence Meter)が登場した．\footnote{アニメ Steins;Gate  14話  19分33秒 付近で登場}
+
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{image/DivergenceMeter.png}
+	\end{center}
+	\caption{Steins;Gate作中のDivergence Meter}
+	\label{divergence-meter}
+\end{figure}
+
+\figurename \ref{divergence-meter}を見てわかるように，ニキシー管を8つ並べたデバイスである．作中ではn.xxxxxxxという表示で，整数桁1つと少数桁7表示で，世界線の変動率を表している．
+Steins;Gateの地上波放送以来，ダイバージェンスメーターを模したニキシー管時計の制作が流行し，Google等でダイバージェンスメーターと検索すれば多くの作例を見ることができる．
+その作例の多くが74141などのすでにディスコンになったビンテージICを利用して，ニキシー管のドライブをしている．それらのICはすでにディスコン(生産終了品)のため，値段の高騰などにより入手性に問題が生じている．
+
+ニキシー管を点灯させるために200V程度の高い直流電圧が必要となる.
+しかし，多くの作例ではNJM2360等を利用した単純なチョッパ昇圧を利用しているが，大きなFETが必要になるなどの不便な点が存在する．
+そこで本作品では，より効率的にするためにフライバックトランスを用いたフライバックコンバーターを用いた．
+
+ディスコンととなった74141等のICを利用せずに，現在でも生産の続くICを利用し，また昇圧回路もチョッパ昇圧ではなくフライバックコンバーターを用いたモダンなニキシー管時計を制作することを今回の目的とする．
+
+\section{制作物概要・仕様}
+\subsection{概要}
+本作品は，旧ソビエト連邦で製造されたニキシー管 IN-14 を8つ利用したニキシー管時計である．
+名前の通り時計としての機能を持っている．そのほかにはBosch製のBME280というセンサーを搭載し，気温，気圧，湿度を表示することが可能となっている．
+またTCP/IPスタックの実装されたマイコン ESP32 を利用し，各所が運用するNTPサーバーに時刻を問い合わせることにより，正確かつ自動的な時刻補正が可能となっている．また，ESP32上にサーバーを立てることにより，APIを通した自由な表示内容の切り替えを可能としている．活用方法としてはホストで再生中の楽曲の秒数をpostするようなプログラムを書き，今何分何秒の場所を再生しているのかという内容を表示することが可能となる．
+
+\subsection{外観}
+
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{image/nixie_clock_front.png}
+        \caption{ニキシー管時計の前面画像}
+    \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{image/nixie_clock_back.png}
+        \caption{ニキシー管時計の背面画像}
+    \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{image/nixie_clock_bird_eye.png}
+        \caption{ニキシー管時計の俯瞰画像}
+    \end{center}
+\end{figure}
+
+\newpage
+
+\subsection{使用方法}
+まず初めに， \figurename \ref{nixie_clock_back} 左側にあるDC Jackに5V 2A以上を供給できるACアダプタ―を指すと自動的に起動し，時計モードになる．
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{image/nixie_clock_back.png}
+        \caption{ニキシー管時計の背面画像}
+        \label{nixie_clock_back}
+    \end{center}
+\end{figure}
+
+
+
+他にも，ニキシー管時計には以下の5つのモードを用意している． \\
+
+\begin{easylist}[itemize]
+@ 時計モード
+@@ hh.mm.ss のフォーマットで数字とdotを各管に割り当てて表示するモード
+@ 日付モード
+@@ yy.mm.dd のフォーマットで数字とdotを各管に割り当てて表示するモード
+@ 気温/湿度モード
+@@ nn.d℃とnn.d％ をそれぞれ3管で表示するモード
+@ 気圧モード
+@@ nnnn.dd hPa を6管使い，右詰めで表示するモード
+@ APIモード
+@@ http://[esp32のIP address]/set に特定のパラメーターをpostすることで任意の数字とドットをニキシー管に表示するモード
+\end{easylist}
+
+% 見にくいので空行を挿入
+\vspace{\baselineskip}
+
+APIモードに関してはニキシー管時計が同一LAN上に存在しているときに http://[esp32のIP address]/set?num=00110011 のようにパラーメータを付加することで利用可能となっている．
+他にもモード切替などもAPI経由でできるようになっている．先の例では00110011という数字を表示しろという意味になる．
+
+\figurename \ref{nixie_clock_front_with_description} のButton2とButton3を利用することで，\figurename \ref{mode-flow} のに記載されてるようなモード遷移が出来る．
+具体的には，Button2を押したときには図の矢印方向に，Button3を押したときは図の矢印とは反対方向にモード遷移する．
+
+またButton1は，あらかじめあるモードを設定しておくことで，押すと一発で元設定していたモードに遷移することが出来るようになっている．
+
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{image/nixie_clock_with_description.pdf}
+        \caption{ニキシー管時計の前面画像}
+        \label{nixie_clock_front_with_description}
+    \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=0.2\linewidth]{image/mode-flow.pdf}
+        \caption{モード遷移図}
+        \label{mode-flow}
+    \end{center}
+\end{figure}
+
+\end{document}
