@@ -9,9 +9,9 @@
 	\section{ニキシー管の点灯特性測定}
 	\label{ex1}
 
+	\subsection{実験方法}
 	\figurename \ref{ex1-circuit} に実験で利用した回路図を示す．
 	
-	\subsection{実験方法}
 	\begin{figure}[htbp]
 		\begin{center}
 			\includegraphics{image/ex1.png}
@@ -20,20 +20,42 @@
 		\end{center}
 	\end{figure}
 	
-	直流安定化電源V1を用いて，ニキシー管に120V~180Vの電圧を印加し，
+	直流安定化電源V1を用いて，ニキシー管に120V~150V程度の電圧を印加し，
 	ニキシー管の点灯開始閾値電圧や，電流特性を調べる．
+
+	また定量的に図ることが難しいが，目視の感覚で明るさについても調べる．
+
+	\begin{table}
+		\centering
+		\caption{実験器具一覧}
+		\begin{tabular}{|l|l|l|}
+		\hline
+		
+		使用器具 & 型番 & 数量 \\ \hline
+		直流安定化電源 & PA250-0.25B & 1 \\ \hline
+		抵抗 & 4.7[kΩ] カーボン & 1 \\ \hline
+		DMM & VOAC7521 & 1 \\ \hline
+		ニキシー管 & IN-14 & 1 \\ \hline
+		
+		\end{tabular}
+		\end{table}
 
 	\subsection{実験結果}
 
-	\subsubsection{VI特性}
+	\subsubsection{ニキシー管のVI特性}
 
-	\begin{table}
+	以下に，\figurename \ref{ex1-circuit} の直流電源 V1の電圧を上げていったとき，下げていった時の
+	CON1とCON2間の電位差を測定する．
+
+	測定結果を以下に示す．
+
+	\begin{table}[htbp]
 		\centering
 		\caption{電圧を上げていった時のVI特性}
 		\begin{tabular}{|l|l|l|}
 		\hline
 		
-		電圧 & 電圧降下 & 電流 \\ \hline
+		電圧[V] & 電圧降下[V] & 電流[A] \\ \hline
 		120 & 0.001 & 2.12766E-07 \\ \hline
 		125 & 0.001 & 2.12766E-07 \\ \hline
 		130 & 0.001 & 2.12766E-07 \\ \hline
@@ -65,14 +87,16 @@
 		
 		\end{tabular}
 	\end{table}
-	
-	\begin{table}
+
+	\newpage
+
+	\begin{table}[htbp]
 		\centering
-		\caption{電圧を下げていった時のVI特性}}
+		\caption{電圧を下げていった時のVI特性}
 		\begin{tabular}{|l|l|l|}
 		\hline
 		
-		電圧 & 電圧降下 & 電流 \\ \hline
+		電圧[V] & 電圧降下[V] & 電流[A] \\ \hline
 		131 & 0 & 0 \\ \hline
 		131.5 & 0.187 & 3.97872E-05 \\ \hline
 		132 & 0.75 & 0.000159574 \\ \hline
@@ -96,19 +120,93 @@
 		\end{tabular}
 	\end{table}
 
-	\subsubsection{明るさ}
+	以上の結果をプロットしたものを \figurename \ref{ex1-fig1} に示す．
 
+	\newpage
 
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=\linewidth]{image/histgraph.png}
+			\caption{印加電圧/R1での電圧降下}
+			\label{ex1-fig1}
+		\end{center}
+	\end{figure}
+
+	\figurename \ref{ex1-fig1} の120V-140V部分を拡大した図を \figurename \ref{ex1-fig2}に示す．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=\linewidth]{image/histgraphkk.png}
+			\caption{印加電圧/R1での電圧降下 120V-140V拡大}
+			\label{ex1-fig2}
+		\end{center}
+	\end{figure}
+
+	\newpage
+
+	\subsubsection{印加電圧と明るさ}
+
+	点灯開始閾値電圧を超えたタイミングから光りはじめ，電圧を高くするにつれて輝度は高くなった．
+	電圧を下げていくと，点灯開始閾値電圧を超えても光り続け，消灯直前は数字の電極の一部のみが点灯するようになっていた．
 
 	\subsection{考察}
-	\subsubsection{}
-
+	\subsubsection{VI特性}
 
 	結果のグラフからわかるように，ニキシー管の点灯開始電圧は135V付近にあり，それを超えると急激に電流が増え，点灯開始する．
 	電圧を徐々に下げていくと，点灯開始電圧を下回っても点灯状態が維持されており，一次関数的な変化をしながら点灯が終わるようになっていた．
 	
+	\subsubsection{印加電圧と明るさ}
 	
+	印加電圧と明るさに関して電圧ダイヤルを回したところ，ダイヤルを回した量と明るさは一次関数的相関があったということは，
+	電流の大きさと輝度に一次関数的相関があるということであり，明るさを制御したいときは全体に印加する電圧を調整すればよいと考えられる．
 
-	
+	\section{ダイナミック点灯とニキシー管のスイッチング特性}
+	\subsection{実験方法}
+	\figurename \ref{drive_sch1}，\figurename \ref{drive_sch2}，\figurename \ref{mount_sch} に示した，実際に制作した回路でダイナミック点灯に関するデータを測定する．
+	具体的にはアノードの抵抗，R28とR29のニキシー管のアノード側の電圧を測定した．
+
+	\subsection{実験結果}
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=0.8\linewidth]{image/ex2-ci.png}
+			\caption{ニキシー管のスイッチング波形 2ch}
+			\label{ex2-fig1}
+		\end{center}
+	\end{figure}
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=0.8\linewidth]{image/ex2-ci2.png}
+			\caption{ニキシー管ののスイッチング波形 1ch}
+			\label{ex2-fig2}
+		\end{center}
+	\end{figure}
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=0.8\linewidth]{image/ex2-ci3.png}
+			\caption{ON部分を拡大したスイッチング波形}
+			\label{ex2-fig3}
+		\end{center}
+	\end{figure}
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=0.8\linewidth]{image/ex2-ci4.png}
+			\caption{ON部分の上部の波形を拡大した波形}
+			\label{ex2-fig4}
+		\end{center}
+	\end{figure}
+
+	\newpage
+
+	\subsection{考察}
+	ニキシー管のダイナミック点灯のスイッチングはうまくできていた．
+
+	近くの管，主に隣の管が点灯しているとき，原理・設計のプリバイアスで述べたような，通常の点灯とは逆方向への放電で，フォトカプラがONになっていない時も，ニキシー管のアノードには最大で100V程度の電圧がかかっていた．
+
+　　ニキシー管の点灯開始時間に関して，\figurename \ref{ex2-fig4} を見るとわかるように，ニキシー管は高電圧を印加してから，20us程度で点灯開始している．
+	ニキシー管自体も点灯まである程度の時間がかかることがわかる．
 
 \end{document}

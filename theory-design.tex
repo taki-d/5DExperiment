@@ -12,23 +12,116 @@
 
 	\subsection{アノード駆動回路}
 	ニキシー管はアノードがコモンとなっており，ダイナミック点灯する際はアノードをON/OFFすることで，どの桁を点灯するかを制御する必要ある．
-	ただニキシー管は170V程度の高電圧を加えて制御するため，\figurename \ref{nixie_anode_drive} のように，ゲートを駆動する電圧を高くする必要が生じてしまう．
 
+	まずトランジスタで単純に駆動する回路を考えてみる．
 
-	耐圧の高いトランジスタやFETを使ったような \figurename \ref{nixie_anode_transistor} 回路がある．しかし，アノードの数だけ耐圧の高いトランジスタ/FETを使うため，値段も高くなる．
-	また抵抗等の部品点数アノードの数だけ多くなり実装コストが大きくなる．そのため，トランジスタ/FEt以外を使った制御方法を考える必要がある．
-	250V程度のシンク出力が可能な入手性の高いICは存在しない．そのため各アノードはフォトカプラで駆動するのが一番良いと考えられる．
-	インターネット上の多くの作例で使われていたTOSHIBAのGaAs赤外LEDとダーリントン型フォトトランジスタ光結合させたDIPのフォトカプラのデータシートの抜粋部分のターンオフ時間
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics{image/th2.png}
+			\caption{トランジスタを利用した アノードドライブ回路}
+			\label{nixie_anode_drive}
+		\end{center}
+	\end{figure}	
 
-	msとスイッチングが遅く，毎秒約2500回ほどオンオフするのがスペック上の限界となっている．
+	ただニキシー管は170V程度の高電圧を加えて制御するため，\figurename \ref{nixie_anode_drive} のような回路では，ゲートを駆動する電圧を高くする必要が生じてしまう．
+	そのため3.3Vや5V程度の電圧では駆動することが出来ない．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics{image/th1.png}
+			\caption{トランジスタを2個利用した アノードドライブ回路}
+			\label{nixie_anode_transistor}
+		\end{center}
+	\end{figure}
+
+	そこで，耐圧の高いトランジスタやFETを使ったような \figurename \ref{nixie_anode_transistor} 回路がある．
+	CTRL端子にトランジスタの閾値電圧以上の電圧をかけるとQ1が駆動し，R1,R2に電流が流れ，これによってQ2の駆動電圧を確保するようになっている．
+	しかし，アノードの数だけ耐圧の高いトランジスタ/FETを使うため，値段も高くなる．
+	また抵抗等の部品点数アノードの数だけ多くなり実装コストが大きくなる．そのため，トランジスタ/FET以外を使った制御方法を考える必要がある．
+	調査したところ，250V程度耐圧を持ったシンク出力が可能な入手性の高いICは存在しない．そのため各アノードはフォトカプラで駆動するのが一番良いと考えられる．
+	インターネット上の多くの作例で使われていたTOSHIBAのGaAs赤外LEDとダーリントン型フォトトランジスタを光結合させたDIP型のフォトカプラTLP627は
+	ダーリントン型のためスイッチングが遅く，ニキシー管の明るさを確保しきれていない．
+	確保するためには，ダーリントン型ではないフォトカプラが必要となる．
+	
+	20倍程度高速に動作するTL188というTOSHIBA製の表面実装フォトカプラがありそれを利用してドライブすることにする．
+	最終的なアノードのドライブ回路を \figurename \ref{nixie_anode_photoscoupler} に示す．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics{image/th3.png}
+			\caption{フォトカプラを利用した アノードドライブ回路}
+			\label{nixie_anode_photoscoupler}
+		\end{center}
+	\end{figure}
+
+	\clearpage
 
 	\subsection{プリバイアス}
-	
+	\label{prebias}
+
+	ニキシー管は，意図しない経路で電流が流れ，ダイナミック点灯をするような場合などでは，その電流がゴーストなどの原因になり大きな問題となる．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics{image/prebias.png}
+			\caption{ニキシー管点灯時の電流の経路}
+			\label{nixie_prebias}
+		\end{center}
+	\end{figure}
+
+	黄色の実線の経路が意図された普通の電流経路である．しかし，破線経路のような点灯していない他の電極(電位的に浮いている)に対しても放電が生じ，
+	それがまわりまわって隣のニキシー管の1の数字を光らせるという現象が起こる．
+	これがゴーストの原因となり，ニキシー管の表示の視認性の低下などが起きる．
+	これは点灯していない電極が電気的に浮いてることが原因なので，点灯していないときに放電が起こらない電圧にクランプすることで防止することが可能である．
+
 	\subsection{カソードの駆動回路}
+	\ref{prebias} で述べたように単純にカソードをトランジスタでスイッチするだけでは不十分である．ONしてないときに任意のある電圧に出力を設定できるようなICを選定する必要がある．
+	クランプ電圧を高くすれば高くするほど余計な意図しない放電が起こりにくいため，クランプ電圧の高くできるものを選定する．
+
+	Digikeyなどで選定した結果，クランプ電圧が90V程度と比較的高く取ることが可能な，texas instrumentsのSN75468を利用することにした．
+
+
 
 	\section{昇圧回路}
+	一般的なニキシー管の昇圧回路は，目的に書いたようなチョッパ昇圧やコッククロフト・ウォルトン回路用いたものがある．
+	チョッパ昇圧を用いたニキシー管向け昇圧回路を以下に示す．
 
-	\section{基板設計}
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=\linewidth]{image/upconverter.png}
+			\caption{チョッパ昇圧}
+			\label{nixie_chop}
+		\end{center}
+	\end{figure}
+
+	上のチョッパ昇圧では，200Vを作るのにスイッチングスピードなどを考慮すると12V程度の電圧が必要になってしまう．また大電流を流す必要があり，大きなインダクタと，
+	大電流をスイッチする高価なFETが必要になる．
+	ニキシー管点灯実験用に試作した，昇圧モジュールを以下に示す．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=0.7\linewidth]{image/upc.png}
+			\caption{試作 チョッパ昇圧モジュール}
+			\label{nixie_chop_mm}
+		\end{center}
+	\end{figure}
+
+	\figurename \ref{nixie_chop_mm}を見てわかるように大きなFETや，FETのゲートをドライブする回路も必要になってくる．
+	そのため本作品ではフライバックコンバーターを用いた．
+
+	\begin{figure}[htbp]
+		\begin{center}
+			\includegraphics[width=\linewidth]{image/flyback_converter.png}
+			\caption{フライバックコンバーター}
+			\label{nixieflyback}
+		\end{center}
+	\end{figure}
+
+	\figurename \ref{nixieflyback} に示した回路図では，チョッパ昇圧よりも部品数が増えたように感じるが，どの部品も大電流を扱うわけではないので小さく，安価となっている．
+
+	\section{PCB設計}
+	以上の考慮を踏まえてPCBを設計した．
+	回路図/PCBデータなどを本節では示す．
 
 	\subsection{回路図}
 
@@ -68,7 +161,7 @@
 			\begin{center}
 				\includegraphics[width=0.93\linewidth]{image/nixie_mount_schematic.pdf}
 				\caption{ニキシー管 マウント基板}
-				\label{drive_sch1}
+				\label{mount_sch}
 			\end{center}
 		\end{figure}
 		\vspace*{\fill}
@@ -80,8 +173,11 @@
 
 	\subsection{基板}
 	本作品に使用した基板は2枚重ねで利用する．
-	1枚目はニキシー管を駆動する昇圧回路．
-
+	1枚目はニキシー管を駆動する高電圧を生成する昇圧回路，ニキシー管駆動回路，サーバーとなるESP32を搭載する．
+	2枚目はニキシー管のみを実装し，互いを基板対基板コネクタで接続する．
+	ニキシー管は，点灯していると電極のスパッタリングが発生し，管表面に電極の成分が付着する．
+	その管に付着した成分によってニキシー管が見えなくなるのが寿命であるが，その寿命が来てもドライブ基板はそのままで，ニキシー管基板のみを変えれば再利用できるように
+	2枚重ねで設計している．
 
 	\begin{landscape}
 		\topskip0pt
@@ -133,11 +229,11 @@
 		\label{bom} \\
 
 		\hline
-		部品番号 & 値 & パッケージ & 内容 \\ \hline\hline
+		部品番号 & 値 & パッケージ & 内容 \\ \hline
 		\endfirsthead
 
 		\multicolumn{4}{r}{前ページからの続き} \\ \hline
-		部品番号 & 値 & パッケージ & 内容 \\ \hline\hline
+		部品番号 & 値 & パッケージ & 内容 \\ \hline
 		\endhead
 
 		\multicolumn{4}{r}{次ページに続く} \\
@@ -378,7 +474,6 @@
 		\end{center}
 	\end{figure}
 
-	
 
 
 \end{document}
