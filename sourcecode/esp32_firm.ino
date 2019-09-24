@@ -23,13 +23,13 @@ const char* ssid = "yurucamp";
 const char* pass = "mokemoke";
 
 const int8_t timezone = 9;
-unsigned int dpmode = 0;
+unsigned int dpmode = 1;
 
 AsyncWebServer server(80);
 
-const int SW3 = 14;
+const int SW3 = 26;
 const int SW4 = 27;
-const int SW5 = 26;
+const int SW5 = 14;
 
 volatile char func_btn[2] = {
   0,
@@ -45,8 +45,8 @@ volatile int display_num[8] = {
   2,
   3,
   4,
-  5,
-  6,
+  10,
+  10,
   7,
 };
 
@@ -65,6 +65,29 @@ volatile int display_dot[8] = {
   0,
 };
 
+volatile int display_dot_server[8] = {
+  0,
+  1,
+  2,
+  0,
+  0,
+  0,
+  0,
+  0,
+};
+
+volatile int display_num_server[8] = {
+  0,
+  1,
+  2,
+  3,
+  4,
+  10,
+  10,
+  7,
+};
+
+
 volatile bool func_enable[10] = {
   true,
   true,
@@ -79,7 +102,8 @@ volatile bool func_enable[10] = {
 };
 
 
-String html ="<!DOCTYPE html> <html lang=\"ja\"> <head> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Bootstrap Sample</title> <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" rel=\"stylesheet\"> <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script> <script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js\"></script> <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\"></script> </head> <body> <header style=\"background-color:white\"></header> <form> <div class=\"container-fluid\"> <div class=\"row\"> <div class=\"container\"> <h3>ボタンのモード設定</h3> <table class=\"table table-bordered\"> <thead> <tr> <th>ボタンの名前</th> <th>モード</th> </tr> </thead> <tbody> <tr> <th scope=\"row\">func1</th> <td> <select name=\"func1\"> <option value=\"0\">日付</option> <option value=\"1\">時刻</option> <option value=\"2\">気圧</option> <option value=\"3\">気温、湿度</option> <option value=\"4\">緯度経度</option> <option value=\"5\">APIモード</option> <option value=\"6\">タイマー</option> </select> </td> </tr> <tr> <th scope=\"row\">func2</th> <td> <select name=\"func2\"> <option value=\"0\">日付</option> <option value=\"1\">時刻</option> <option value=\"2\">気圧</option> <option value=\"3\">気温、湿度</option> <option value=\"4\">緯度経度</option> <option value=\"5\">APIモード</option> <option value=\"6\">タイマー</option> </select> </td> </tr> </tbody> </table> </div> <br> <div class=\"container\"><br> <h3>Wifi設定</h3> <p>現在のIPアドレスは</p> <!-- Wifi情報をとってくる --> <p>現在接続中のWifiは</p> <!-- Wifi情報をとってくる --> <br> <div class=\"form-group\"> <h3>NTPアドレス</h3> <input type=\"email\" class=\"form-control\" id=\"exampleInputaddr\" placeholder=\"example\"> </div> </form> <br> <div class=\"checkbox\"> <h3>有効にするモード</h3> <label> <input type=\"checkbox\" name=\"date\"> 日付<br> <input type=\"checkbox\" name=\"clock\"> 時刻<br> <input type=\"checkbox\" name=\"pressure\"> 気圧<br> <input type=\"checkbox\" name=\"temp\"> 気温、湿度<br> <input type=\"checkbox\" name=\"gps\"> 緯度、経度<br> <input type=\"checkbox\" name=\"api\"> APIモード<br> <input type=\"checkbox\" name=\"timer\"> タイマー<br> </label> </div> <button type=\"submit\" class=\"btn btn-primary\">送信</button> </div> </div> </div> </form> <footer style=\"background-color:white\"></footer> </body> </html>";
+String html ="<!DOCTYPE html> <html lang=\"ja\"> <head> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>NIXIE TUBE CONTROL</title> <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" rel=\"stylesheet\"> <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script> <script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js\"></script> <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\"></script> </head> <body> <header style=\"background-color:white\"></header> <form> <div class=\"container-fluid\"> <div class=\"row\"> <div class=\"container\"> <h3>ボタンのモード設定</h3> <table class=\"table table-bordered\"> <thead> <tr> <th>ボタンの名前</th> <th>モード</th> </tr> </thead> <tbody> <tr> <th scope=\"row\">func1</th> <td> <select name=\"func1\"> <option value=\"0\">日付</option> <option value=\"1\">時刻</option> <option value=\"2\">気圧</option> <option value=\"3\">気温、湿度</option><option value=\"4\">APIモード</option></select> </td> </tr> <tr> <th scope=\"row\">func2</th> <td> <select name=\"func2\"> <option value=\"0\">日付</option> <option value=\"1\">時刻</option> <option value=\"2\">気圧</option> <option value=\"3\">気温、湿度</option> <option value=\"4\">APIモード</option> </select> </td> </tr> </tbody> </table> </div> <br> <div class=\"container\"><br> <div class=\"form-group\"> <h3>NTPアドレス</h3> <input type=\"email\" class=\"form-control\" id=\"exampleInputaddr\" placeholder=\"example\"> </div> </form> <br> <div class=\"checkbox\"> <h3>有効にするモード</h3> <label> <input type=\"checkbox\" name=\"date\"> 日付<br> <input type=\"checkbox\" name=\"clock\"> 時刻<br> <input type=\"checkbox\" name=\"pressure\"> 気圧<br> <input type=\"checkbox\" name=\"temp\"> 気温、湿度<br> <input type=\"checkbox\" name=\"api\"> APIモード<br> <input type=\"checkbox\" name=\"timer\"> タイマー<br> </label> </div> <button type=\"submit\" class=\"btn btn-primary\">送信</button> </div> </div> </div> </form> <footer style=\"background-color:white\"></footer> </body> </html>";
+
 
 HardwareSerial serial0(0);
 HardwareSerial atmega_serial(2);
@@ -97,7 +121,14 @@ void setNum(){
   String command = "num ";
 
   for(int n = 0; n < 8; n++){
-    String temp = String(command + String(display_num[n]));
+    String temp;
+
+    if(display_num[n] == 10){
+      temp = String(command + String("n"));
+    }else{
+      temp = String(command + String(display_num[n]));
+    }
+    
     command = temp;
   }
 
@@ -110,6 +141,7 @@ void setDot(){
   String command = "dot ";
 
   for(int n = 0; n < 8; n++){
+
     String temp = String(command + String(display_dot[n]));
     command = temp;
   }
@@ -152,7 +184,8 @@ void setup() {
   bool isWiFiConnected = true;
 
   serial0.printf("Connecting to %s ", ssid);
-  WiFi.disconnect(true);
+  // WiFi.disconnect(true);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
   unsigned long time = millis();
   while (WiFi.status() != WL_CONNECTED) {
@@ -166,7 +199,15 @@ void setup() {
       break;
     }
   }
-  serial0.println(" CONNECTED");
+
+  // io32 led
+  pinMode(32, OUTPUT);
+  digitalWrite(32, isWiFiConnected);
+
+  if(isWiFiConnected){
+    serial0.println(" CONNECTED");
+    serial0.println(WiFi.localIP());
+  }
   
   //RTCのあれこれ
   if (! rtc.begin()) {
@@ -202,14 +243,11 @@ void setup() {
         String param = p->value();
 
         for(char i = 0; i < 8; i++){
-          if(param[i] == ':'){
-            // display_pattern[i][0] = 0;
-            // display_pattern[i][1] = 0;
-            continue;
+          if (param[i] == 'n'){
+            display_num_server[i] = 10;
+          }else{
+            display_num_server[i] = param[i] - '0';
           }
-        
-          // memcpy(display_pattern[i], (void*)num_signal_pattern[param[i] - '0'], 2);
-      
         }
       }
 
@@ -217,22 +255,7 @@ void setup() {
         String param = p->value();
 
         for(char i = 0; i < 8; ++i){
-          // display_pattern[i][0] &= 0b11111100;
-
-          switch(param[i] - '0'){
-            case 0:
-              // display_pattern[i][0] |= dot_signal_pattern[0][0];
-              break;
-            case 1:
-              // display_pattern[i][0] |= dot_signal_pattern[1][0];
-              break;
-            case 2:
-              // display_pattern[i][0] |= dot_signal_pattern[2][0];
-              break;
-            case 3:
-              // display_pattern[i][0] |= dot_signal_pattern[3][0];
-              break;
-          }
+          display_dot_server[i] = param[i] - '0';
         }
       }
 
@@ -322,30 +345,152 @@ void setup() {
 }
 
 void setDisplayTime(DateTime now){
-  /*
-  memcpy(display_pattern[0], (void*)num_signal_pattern[now.hour()%100/10], 2);
-  memcpy(display_pattern[1], (void*)num_signal_pattern[now.hour()%10], 2);
-  memcpy(display_pattern[2], (void*)dot_signal_pattern[2], 2);
-  memcpy(display_pattern[3], (void*)num_signal_pattern[now.minute()%100/10], 2);
-  memcpy(display_pattern[4], (void*)num_signal_pattern[now.minute()%10], 2);
-  memcpy(display_pattern[5], (void*)dot_signal_pattern[2], 2);
-  memcpy(display_pattern[6], (void*)num_signal_pattern[now.second()%100/10], 2);
-  memcpy(display_pattern[7], (void*)num_signal_pattern[now.second()%10], 2);
-  */
+  
+  display_num[0] = now.hour()%100/10;
+  display_num[1] = now.hour()%10;
+  display_num[2] = 10;
+  display_num[3] = now.minute()%100/10;
+  display_num[4] = now.minute()%10;
+  display_num[5] = 10;
+  display_num[6] = now.second()%100/10;
+  display_num[7] = now.second()%10;
+
+  display_dot[0] = 0;
+  display_dot[1] = 0;
+  display_dot[2] = 2;
+  display_dot[3] = 0;
+  display_dot[4] = 0;
+  display_dot[5] = 2;
+  display_dot[6] = 0;
+  display_dot[7] = 0;
+  
 }
 
 void setDisplayDate(DateTime now){
+  display_num[0] = now.year()%100/10;
+  display_num[1] = now.year()%10;
+  display_num[2] = 10;
+  display_num[3] = now.month()%100/10;
+  display_num[4] = now.month()%10;
+  display_num[5] = 10;
+  display_num[6] = now.day()%100/10;
+  display_num[7] = now.day()%10;
+
+  display_dot[0] = 0;
+  display_dot[1] = 0;
+  display_dot[2] = 2;
+  display_dot[3] = 0;
+  display_dot[4] = 0;
+  display_dot[5] = 2;
+  display_dot[6] = 0;
+  display_dot[7] = 0;
 }
 
 void setDisplayThermoHumidity(double temperature, double humidity){
+  display_num[0] = (int)temperature%100/10;
+  display_num[1] = (int)temperature%10/1;
+  display_num[2] = (int)round(temperature*10)%10;
+  display_num[3] = 10;
+  display_num[4] = 10;
+  display_num[5] = (int)humidity%100/10;
+  display_num[6] = (int)humidity%10/1;
+  display_num[7] = (int)round(humidity*10)%10;
 
+  display_dot[0] = 0;
+  display_dot[1] = 2;
+  display_dot[2] = 0;
+  display_dot[3] = 0;
+  display_dot[4] = 0;
+  display_dot[5] = 0;
+  display_dot[6] = 2;
+  display_dot[7] = 0;
 }
 
 void setDisplayPressure(double pressure){
+  display_num[0] = 10;
+  display_num[1] = 10;
+  display_num[2] = (int)pressure%10000/1000 == 0 ? 10 : (int)pressure%10000/1000;
+  display_num[3] = (int)pressure%1000/100;
+  display_num[4] = (int)pressure%100/10;
+  display_num[5] = (int)pressure%10/1;
+  display_num[6] = (int)(pressure*10)%10;
+  display_num[7] = (int)(pressure*100)%10;
+
+  display_dot[0] = 0;
+  display_dot[1] = 0;
+  display_dot[2] = 0;
+  display_dot[3] = 0;
+  display_dot[4] = 0;
+  display_dot[5] = 2;
+  display_dot[6] = 0;
+  display_dot[7] = 0;
+}
+
+void setServerNumDot(){
+  for(int i = 0; i < 8; i++){
+    display_dot[i] = display_dot_server[i];
+    display_num[i] = display_num_server[i];
+  }
 }
 
 double temp_act, press_act, hum_act; //最終的に表示される値を入れる変数
+DateTime now_time;
 
 void loop() {
+  if(!digitalRead(SW3)){
+    while(!digitalRead(SW3));
+    dpmode++;
 
+    while(!func_enable[dpmode]){
+      dpmode++;
+    }
+
+    if(dpmode>4) dpmode = 0;
+  }
+
+  if(!digitalRead(SW4)){
+    while(!digitalRead(SW4));
+
+    dpmode = func_btn[0];
+  }
+
+  if(!digitalRead(SW5)){
+    while(!digitalRead(SW5));
+
+    dpmode = func_btn[1];
+  }
+  
+  switch (dpmode)
+  {
+  case 0:
+    now_time = rtc.now();
+    setDisplayDate(now_time);
+    break;
+
+  case 1:
+    now_time = rtc.now();
+    setDisplayTime(now_time);
+    break;
+  
+  case 2:
+    bme280.readData(&temp_act, &press_act, &hum_act);
+    setDisplayThermoHumidity(temp_act, hum_act);
+    delay(100);
+    break;
+
+  case 3:
+    bme280.readData(&temp_act, &press_act, &hum_act);
+    setDisplayPressure(press_act);
+    delay(100);
+    break;
+
+  case 4:
+    //api mode
+    setServerNumDot();
+    delay(10);
+    break;
+  }
+
+  setNum();
+  setDot();
 }
